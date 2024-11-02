@@ -3,7 +3,7 @@
     <title>商品一覧</title>
     <script>
         async function fetchProducts() {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbyhmJeobAuwxZgwk9bprvPeNu9U-i-LLrpXT5p0sFbK88uWc64hqY_6qvnWhiuz5AF5/exec'); // GAS APIのURLをここに貼り付け
+            const response = await fetch('https://script.google.com/macros/s/AKfycbxD9fMHQTOtScIhZuyy-med-T8yfJMpd0J_IHx8cyN5PhC4pWoDwMxk1oz9KYBU6zu-/exec'); // GAS APIのURLをここに貼り付け
             const products = await response.json();
             displayProducts(products);
         }
