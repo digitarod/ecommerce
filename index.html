@@ -15,8 +15,8 @@
                     const productElement = document.createElement('div');
                     productElement.innerHTML = `
                         <h2>${product.商品名}</h2>
-                         <img src="${product.画像URL}" alt="${product.商品名}" style="max-width: 100%;"> <!-- max-widthを追加 -->                
-                        <p>${product.説明}</p>
+                        <img src="${product.画像URL}" alt="${product.商品名}" style="max-width: 100%; height: auto;"> <!-- 最大幅を100%に設定 -->
+                　　　　<p>${product.説明}</p>
                         <p>価格: ${product.価格} 円</p>
                     `;
                     productContainer.appendChild(productElement);
