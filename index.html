@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>商品一覧</title>
+    <script>
+        async function fetchProducts() {
+            const response = await fetch('YOUR_GAS_API_URL'); // GAS APIのURLをここに貼り付け
+            const products = await response.json();
+            displayProducts(products);
+        }
+        
+        function displayProducts(products) {
+            const productContainer = document.getElementById('product-container');
+            products.forEach(product => {
+                if (product.公開フラグ === 1) { // 公開フラグが1のものだけを表示
+                    const productElement = document.createElement('div');
+                    productElement.innerHTML = `
+                        <h2>${product.商品名}</h2>
+                        <img src="${product.画像URL}" alt="${product.商品名}">
+                        <p>${product.説明}</p>
+                        <p>価格: ${product.価格} 円</p>
+                    `;
+                    productContainer.appendChild(productElement);
+                }
+            });
+        }
+        
+        window.onload = fetchProducts;
+    </script>
+</head>
+<body>
+    <h1>商品一覧</h1>
+    <div id="product-container"></div>
+</body>
+</html>
