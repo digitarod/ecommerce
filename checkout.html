@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品一覧</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>商品一覧</h1>
+    <div id="product-container"></div>
+
+    <!-- カート表示用コンテナ -->
+    <div id="cart-container">
+        <h2>カート</h2>
+        <div id="cart-items"></div>
+        <p id="cart-total">合計: 0 円</p>
+        <button id="checkout-button">チェックアウト</button> <!-- チェックアウトボタン -->
+    </div>
+
+    <script>
+        async function fetchProducts() {
+            const response = await fetch('YOUR_GAS_API_URL'); // GAS APIのURLを貼り付け
+            const products = await response.json();
+            displayProducts(products);
+        }
+
+        function displayProducts(products) {
+            const productContainer = document.getElementById('product-container');
+            products.forEach(product => {
+                if (product.公開フラグ === 1) { // 公開フラグが1のものだけを表示
+                    const productElement = document.createElement('div');
+                    productElement.className = 'product';
+                    productElement.innerHTML = `
+                        <h2>${product.商品名}</h2>
+                        <img src="${product.画像URL}" alt="${product.商品名}">
+                        <p>${product.説明}</p>
+                        <p>価格: ${product.価格} 円</p>
+                        <button onclick="addToCart(${product.商品ID}, '${product.商品名}', ${product.価格})">カートに追加</button>
+                    `;
+                    productContainer.appendChild(productElement);
+                }
+            });
+        }
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function addToCart(productId, productName, productPrice) {
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id: productId, name: productName, price: productPrice, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            cartItemsContainer.innerHTML = '';
+
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                const itemElement = document.createElement('div');
+                itemElement.innerHTML = `
+                    <span>${item.name}</span> - <span>${item.price} 円</span> x <span>${item.quantity}</span>
+                    <button onclick="removeFromCart(${item.id})">削除</button>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+
+            cartTotalElement.textContent = `合計: ${total} 円`;
+        }
+
+        function removeFromCart(productId) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity -= 1;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                updateCart();
+            }
+        }
+
+        // チェックアウトボタンのクリックイベント
+        document.getElementById('checkout-button').addEventListener('click', function() {
+            localStorage.setItem('cart', JSON.stringify(cart)); // カートをローカルストレージに保存
+            window.location.href = 'checkout.html'; // チェックアウトページに遷移
+        });
+
+        window.onload = fetchProducts;
+    </script>
+</body>
+</html>
