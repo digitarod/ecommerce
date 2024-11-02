@@ -60,7 +60,7 @@
                     productElement.className = 'product'; // 商品カードのスタイルを適用
                     productElement.innerHTML = `
                         <h2>${product.商品名}</h2>
-                        <img src="${product.画像URL}" alt="${product.商品名}">
+                        <img src="./image/${product.画像ファイル名}" alt="${product.商品名}">
                         <p>${product.説明}</p>
                         <p>価格: ${product.価格} 円</p>
                     `;
