@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>注文確認</title>
-    <style>
-        .cart-item {
-            border-bottom: 1px solid #ccc;
-            padding: 10px;
-        }
-    </style>
+    <title>注文確定</title>
 </head>
 <body>
     <h1>注文確認</h1>
@@ -19,59 +13,32 @@
     <div id="feedback-message" style="margin-top: 20px; font-weight: bold;"></div>
 
     <script>
-        console.log("Script loaded");
+        console.log("Script loaded"); // スクリプトがロードされたか確認
 
-        // カートの内容を画面に表示する関数
-        function displayCartContent() {
-            const cartContent = document.getElementById('cart-content');
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-
-            if (cartItems.length === 0) {
-                cartContent.textContent = "カートに商品がありません。";
-                return;
-            }
-
-            cartContent.innerHTML = "";
-            cartItems.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'cart-item';
-                itemDiv.innerHTML = `
-                    <p>商品名: ${item.商品名}</p>
-                    <p>価格: ${item.価格} 円</p>
-                    <p>数量: ${item.数量}</p>
-                `;
-                cartContent.appendChild(itemDiv);
-            });
-        }
-
-        // 「注文を確定する」ボタンのクリックイベント
         document.getElementById('confirm-order-button').addEventListener('click', async () => {
-            console.log("Order button clicked");
+            console.log("Order button clicked"); // ボタンがクリックされたか確認
 
             const feedbackMessage = document.getElementById('feedback-message');
-            feedbackMessage.textContent = "送信中...";
+            feedbackMessage.textContent = "注文を送信中...";
 
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-            const requestUrl = 'https://script.google.com/macros/s/AKfycbxpzmy9iYXLPEaYVSbJxuRCYc1t34iufYl6HshX8HKlpZQPJkUnX6q3wCMhgm_y6_2z1g/exec';
+            // カートの内容をURLパラメータとして送信するためにエンコード
+            const orderDetails = JSON.parse(localStorage.getItem('cart')) || [];
+            const orderDetailsEncoded = encodeURIComponent(JSON.stringify(orderDetails));
 
             try {
-                const response = await fetch(requestUrl, {
-                    method: 'POST',
-                    body: JSON.stringify({ items: cartItems }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                // doGetリクエストとしてGoogle Apps Scriptへデータを送信
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbwbvlswouQ7MsAEuC14_NEeS4WKBrrKzJnySSoETBZseZ20saqeZCf2lyqmXC3nDVuP-Q/exec?items=${orderDetailsEncoded}`, {
+                    method: 'GET'
                 });
-                console.log("Response received");
+                console.log("Response received"); // レスポンスが返ってきたか確認
 
                 if (response.ok) {
                     const result = await response.json();
-                    console.log("Response JSON:", result);
+                    console.log("Response JSON:", result); // レスポンスの内容を確認
 
                     if (result.status === 'success') {
                         feedbackMessage.textContent = "注文が正常に確定されました！";
                         localStorage.removeItem('cart');
-                        displayCartContent(); // カート内容を再表示
                     } else {
                         feedbackMessage.textContent = "エラーが発生しました：" + result.message;
                     }
@@ -79,13 +46,10 @@
                     feedbackMessage.textContent = "サーバーエラーが発生しました。再試行してください。";
                 }
             } catch (error) {
-                console.error("Network error:", error);
+                console.error("Network error:", error); // エラーメッセージをログに出力
                 feedbackMessage.textContent = "ネットワークエラーが発生しました：" + error.message;
             }
         });
-
-        // ページ読み込み時にカート内容を表示
-        displayCartContent();
     </script>
 </body>
 </html>
