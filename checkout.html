@@ -60,7 +60,7 @@
 
             const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
             const queryParams = createQueryParams(cartItems);
-            const requestUrl = `https://script.google.com/macros/s/AKfycbxQAFvYTzucUJDCfk-YaSBoiLnVLKDOgILBRQJ57gj6zPXjdO97LoreWsXqy-t5KsR1Zg/exec?${queryParams}`;
+            const requestUrl = `https://script.google.com/macros/s/AKfycbxZLeHUOy9C3mLjre8rMUjgW_9bO4mUuOHFjlnohMFQ2ZqCQYx-u-FTffgw3t74rc7hjg/exec?${queryParams}`;
 
             try {
                 const response = await fetch(requestUrl);
