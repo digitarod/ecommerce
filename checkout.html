@@ -13,17 +13,23 @@
     <div id="feedback-message" style="margin-top: 20px; font-weight: bold;"></div> <!-- メッセージ表示エリア -->
 
     <script>
-        // カート内容表示と注文確定ボタンの設定
-        document.getElementById('confirm-order-button').addEventListener('click', async () => {
-            const feedbackMessage = document.getElementById('feedback-message');
-            feedbackMessage.textContent = "注文を送信中..."; // 送信開始メッセージを表示
+        console.log("Script loaded"); // スクリプトがロードされたか確認
 
+        document.getElementById('confirm-order-button').addEventListener('click', async () => {
+            console.log("Order button clicked"); // ボタンがクリックされたか確認
+
+            // メッセージ表示エリアを取得
+            const feedbackMessage = document.getElementById('feedback-message');
+            feedbackMessage.textContent = "送信中..."; // 送信中メッセージを表示
+
+            // カート内容を取得
             const orderDetails = {
-                // カートの内容や注文情報を設定
                 items: JSON.parse(localStorage.getItem('cart')) || []
             };
+            console.log("Order details:", orderDetails); // カートの内容を確認
 
             try {
+                // URLリクエストを開始
                 const response = await fetch('https://script.google.com/macros/s/AKfycbyyW1ykLEzeyaaaAhfet8O6J_OEQTfHKufSI6ZVAeY4SmkX910CcPunId5yZc3Hy25sxw/exec', {
                     method: 'POST',
                     body: JSON.stringify(orderDetails),
@@ -31,9 +37,12 @@
                         'Content-Type': 'application/json'
                     }
                 });
+                console.log("Response received"); // レスポンスが返ってきたか確認
 
                 if (response.ok) {
                     const result = await response.json();
+                    console.log("Response JSON:", result); // レスポンスの内容を確認
+
                     if (result.status === 'success') {
                         feedbackMessage.textContent = "注文が正常に確定されました！";
                         localStorage.removeItem('cart'); // カートをクリア
@@ -44,9 +53,11 @@
                     feedbackMessage.textContent = "サーバーエラーが発生しました。再試行してください。";
                 }
             } catch (error) {
+                console.error("Network error:", error); // エラーメッセージをログに出力
                 feedbackMessage.textContent = "ネットワークエラーが発生しました：" + error.message;
             }
         });
     </script>
 </body>
 </html>
+
