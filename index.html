@@ -23,7 +23,7 @@
 
     <script>
         async function fetchProducts() {
-            const response = await fetch('GAS_URL'); // GAS APIのURLを貼り付け
+            const response = await fetch('https://script.google.com/macros/s/AKfycbzwMtXejSoTYq1-05mFyDRxBq2Z6n_5O8Tn__TxREBnv3vuweLJ_o9WeD8R66oSFg/exec'); // GAS APIのURLを貼り付け
             const products = await response.json();
             displayProducts(products);
         }
